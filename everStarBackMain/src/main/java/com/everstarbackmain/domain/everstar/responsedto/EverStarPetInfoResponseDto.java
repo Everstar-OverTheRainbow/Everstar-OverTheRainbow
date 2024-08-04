@@ -26,8 +26,7 @@ public class EverStarPetInfoResponseDto {
 	private List<String> petPersonalities; //MypageDto? or service에서 List<String>
 
 	// 인자로 들어간 성격 리스트가 MyPagePetInfoResponseDto에 있느는데 그걸 가져와도 되는건지?
-	public static EverStarPetInfoResponseDto createEverStarPetInfoResponseDto(Pet pet, List<String> petPersonalities, MyPagePetInfoResponseDto petPersonalitiesDto) {
-
+	public static EverStarPetInfoResponseDto createEverStarPetInfoResponseDto(Pet pet, List<String> petPersonalities) {
 		return EverStarPetInfoResponseDto.builder()
 			.userId(pet.getUser().getId())
 			.id(pet.getId())
@@ -37,7 +36,6 @@ public class EverStarPetInfoResponseDto {
 			.age(pet.getAge())
 			.memorialDate(pet.getMemorialDate())
 			.petPersonalities(petPersonalities)
-			// .petPersonalities(petPersonalitiesDto.getPetPersonalities())
 			.build();
 	}
 }
