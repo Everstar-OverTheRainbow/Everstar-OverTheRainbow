@@ -8,16 +8,7 @@ import { PostitIcons } from 'components/atoms/symbols/Postit/PostitIcons';
 import { RocketIcons } from 'components/atoms/symbols/Rocket/RocketIcons';
 
 interface Props {
-  type:
-    | 'default'
-    | 'tablet-earth'
-    | 'mobile-earth'
-    | 'everstar'
-    | 'tablet-everstar'
-    | 'mobile-everstar'
-    | 'mypage'
-    | 'tablet-mypage'
-    | 'mobile-mypage';
+  type: 'default' | 'earth' | 'everstar' | 'mypage';
   className?: string;
 }
 
@@ -52,20 +43,18 @@ export const Header: React.FC<Props> = ({ type, className }) => {
     navigate('/mypage');
   };
 
-  let containerClass = 'w-[1358px] gap-[656px]';
-  let gapClass = 'gap-12';
   let logoVariant: 'small-earth' | 'small-star' = 'small-earth';
   let content = (
     <>
       <LetterIcons
         variant='letter'
         onClick={handleLetterIconClick}
-        className='cursor-pointer'
+        className='cursor-pointer hover:text'
       />
       <LetterboxIcons
         variant='letterbox'
         onClick={handleLetterBoxIconClick}
-        className='cursor-pointer'
+        className='cursor-pointer hover:text'
       />
       <Avatar
         size='small'
@@ -75,38 +64,18 @@ export const Header: React.FC<Props> = ({ type, className }) => {
     </>
   );
 
-  if (
-    type === 'tablet-earth' ||
-    type === 'tablet-everstar' ||
-    type === 'tablet-mypage'
-  ) {
-    containerClass = 'w-[768px] gap-[470px]';
-    gapClass = 'gap-12';
-  } else if (
-    type === 'mobile-earth' ||
-    type === 'mobile-everstar' ||
-    type === 'mobile-mypage'
-  ) {
-    containerClass = 'w-[360px] gap-14';
-    gapClass = 'gap-12';
-  }
-
-  if (
-    type === 'everstar' ||
-    type === 'tablet-everstar' ||
-    type === 'mobile-everstar'
-  ) {
+  if (type === 'everstar') {
     content = (
       <>
         <PostitIcons
           variant='postit'
           onClick={handlePostitIconClick}
-          className='cursor-pointer'
+          className='cursor-pointer hover:text'
         />
         <RocketIcons
           variant='rocket'
           onClick={handleExploreClick}
-          className='cursor-pointer'
+          className='cursor-pointer hover:text'
         />
         <Avatar
           size='small'
@@ -116,14 +85,10 @@ export const Header: React.FC<Props> = ({ type, className }) => {
       </>
     );
     logoVariant = 'small-star';
-  } else if (
-    type === 'mypage' ||
-    type === 'tablet-mypage' ||
-    type === 'mobile-mypage'
-  ) {
+  } else if (type === 'mypage') {
     content = (
       <>
-        <div style={{ width: '24px', height: '24px' }} />{' '}
+        <div style={{ width: '24px', height: '24px' }} />
         <LogoIcons
           variant='small-star-img'
           onClick={handleStarIconClick}
@@ -148,21 +113,15 @@ export const Header: React.FC<Props> = ({ type, className }) => {
 
   return (
     <div
-      className={`flex h-14 items-center justify-center gap-2 px-0 py-2 relative border-b [border-bottom-style:solid] border-black ${className}`}
+      className={`flex h-14 items-center justify-center gap-2 px-0 py-2 relative border-b border-black ${className}`}
     >
-      <div
-        className={`flex items-center justify-center relative ${containerClass}`}
-      >
+      <div className='flex items-center justify-between w-full max-w-screen-lg px-4 md:px-8'>
         <LogoIcons
           variant={logoVariant}
           onClick={logoOnClick()}
           className='cursor-pointer'
         />
-        <div
-          className={`inline-flex items-center justify-center ${gapClass} pl-6 pr-0 py-[7px] relative flex-[0_0_auto]`}
-        >
-          {content}
-        </div>
+        <div className='flex items-center gap-4'>{content}</div>
       </div>
     </div>
   );

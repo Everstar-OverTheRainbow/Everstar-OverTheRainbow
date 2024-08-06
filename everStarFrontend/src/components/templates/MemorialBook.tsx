@@ -224,12 +224,6 @@ export const MemorialBook: React.FC = () => {
       ? 'tablet-everstar'
       : 'everstar';
 
-  const footerType = isMobile
-    ? 'mobile'
-    : isTabletOrMobile
-      ? 'tablet'
-      : 'desktop';
-
   const memorialBookRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPdf = async () => {
@@ -300,7 +294,7 @@ export const MemorialBook: React.FC = () => {
           일기 작성
         </PrimaryButton>
       </div>
-      <Footer type={footerType} className='relative z-10 mt-auto' />
+      <Footer />
     </div>
   );
 };

@@ -45,7 +45,7 @@ export const MyPage: React.FC = () => {
           <Route path='myinfo' element={<MyInfo />} />
         </Routes>
       </div>
-      <Footer type={footerType} className='relative z-10 mt-auto' />
+      <Footer />
     </div>
   );
 };
