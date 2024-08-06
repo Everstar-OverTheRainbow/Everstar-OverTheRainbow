@@ -52,10 +52,10 @@ export const Default: Story = {
   args: {
     pages,
     width: 360,
-    height: 600,
+    height: 508,
     minWidth: 360,
-    maxWidth: 600,
-    minHeight: 600,
-    maxHeight: 600,
+    maxWidth: 508,
+    minHeight: 508,
+    maxHeight: 508,
   },
 };

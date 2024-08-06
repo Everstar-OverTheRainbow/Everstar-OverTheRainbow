@@ -12,7 +12,7 @@ const Page = React.forwardRef<
   { children: React.ReactNode; pageIndex: number }
 >((props, ref) => {
   return (
-    <div className='demoPage h-[600px] w-[360px] bg-white' ref={ref}>
+    <div className='demoPage h-[508px] w-[360px] bg-white' ref={ref}>
       {props.children}
       <div className='absolute text-xs text-gray-500 bottom-2 right-2'>
         {props.pageIndex + 1}
@@ -58,11 +58,11 @@ export interface MemorialBookProps {
 export const MemorialBook: React.FC<MemorialBookProps> = ({
   pages,
   width = 360,
-  height = 600,
+  height = 508,
   minWidth = 360,
-  maxWidth = 600,
-  minHeight = 600,
-  maxHeight = 600,
+  maxWidth = 360,
+  minHeight = 508,
+  maxHeight = 508,
 }) => {
   const bookRef = useRef<MutableRefObject<typeof HTMLFlipBook | null>>(null);
 

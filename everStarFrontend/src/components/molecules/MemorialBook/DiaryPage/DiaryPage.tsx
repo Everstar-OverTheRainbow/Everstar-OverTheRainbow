@@ -12,7 +12,7 @@ export const DiaryPage: React.FC<DiaryPageProps> = ({
   imageUrl,
 }) => {
   return (
-    <div className='relative flex flex-col items-center p-5 h-[600px] w-[360px] mx-auto bg-white border border-gray-300 shadow-md'>
+    <div className='relative flex flex-col items-center p-5 h-[508px] w-[360px] mx-auto bg-white border border-gray-300 shadow-md'>
       <div className='w-full mb-4 text-center'>
         <h2 className='text-xl font-bold leading-tight tracking-wide text-greyscaleblack-100'>
           {title}

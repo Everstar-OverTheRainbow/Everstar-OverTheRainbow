@@ -140,7 +140,8 @@ const jsonData = {
 
 // JSON 데이터를 MemorialBook의 PageType 배열로 변환하는 함수
 const parseMemorialBookData = (data: typeof jsonData) => {
-  const { quests, questAnswers, aiAnswers, diaries, sentimentAnalysis } = data.data;
+  const { quests, questAnswers, aiAnswers, diaries, sentimentAnalysis } =
+    data.data;
 
   const pages: PageType[] = [];
 
@@ -168,7 +169,9 @@ const parseMemorialBookData = (data: typeof jsonData) => {
 
   // Quest Pages 추가
   quests.forEach((quest) => {
-    const questAnswer = questAnswers.find((answer) => answer.questId === quest.id);
+    const questAnswer = questAnswers.find(
+      (answer) => answer.questId === quest.id,
+    );
     const aiAnswer = aiAnswers.find((answer) => answer.questId === quest.id);
 
     if (quest.type === 'TEXT' && questAnswer && aiAnswer) {
@@ -221,7 +224,11 @@ export const MemorialBook: React.FC = () => {
       ? 'tablet-everstar'
       : 'everstar';
 
-  const footerType = isMobile ? 'mobile' : isTabletOrMobile ? 'tablet' : 'desktop';
+  const footerType = isMobile
+    ? 'mobile'
+    : isTabletOrMobile
+      ? 'tablet'
+      : 'desktop';
 
   const memorialBookRef = useRef<HTMLDivElement>(null);
 
@@ -259,10 +266,10 @@ export const MemorialBook: React.FC = () => {
 
   return (
     <div
-      className="relative flex flex-col min-h-screen bg-center bg-cover"
+      className='relative flex flex-col min-h-screen bg-center bg-cover'
       style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <Header type={headerType} className="sticky top-0 z-50" />
+      <Header type={headerType} className='sticky top-0 z-50' />
       <Glass
         variant={isMobile ? 'mobile' : isTabletOrMobile ? 'tablet' : 'desktop'}
         currentPage={1}
@@ -270,13 +277,13 @@ export const MemorialBook: React.FC = () => {
         onPageChange={(newPage) => console.log('Page changed to:', newPage)}
         showPageIndicator={false}
       />
-      <div className="relative z-10 my-4" ref={memorialBookRef}>
+      <div className='relative z-10 my-4' ref={memorialBookRef}>
         <OrganicsMemorialBook pages={questionsAndAnswers} />
       </div>
-      <div className="relative z-10 flex justify-center my-4 space-x-4">
+      <div className='relative z-10 flex justify-center my-4 space-x-4'>
         <PrimaryButton
-          theme="white"
-          size="medium"
+          theme='white'
+          size='medium'
           onClick={handleDownloadPdf}
           disabled={false}
           icon={null}
@@ -284,8 +291,8 @@ export const MemorialBook: React.FC = () => {
           PDF로 만들기
         </PrimaryButton>
         <PrimaryButton
-          theme="white"
-          size="medium"
+          theme='white'
+          size='medium'
           onClick={handleWriteDiary}
           disabled={false}
           icon={null}
@@ -293,7 +300,7 @@ export const MemorialBook: React.FC = () => {
           일기 작성
         </PrimaryButton>
       </div>
-      <Footer type={footerType} className="relative z-10 mt-auto" />
+      <Footer type={footerType} className='relative z-10 mt-auto' />
     </div>
   );
 };
