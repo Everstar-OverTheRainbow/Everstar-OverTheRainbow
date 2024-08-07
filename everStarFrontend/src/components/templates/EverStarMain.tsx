@@ -105,7 +105,17 @@ export const EverStarMain: React.FC<EverStarMainProps> = ({
 
   const handleButtonClick = () => {
     onButtonClick();
-    navigate('/earth');
+    if (!buttonDisabled) {
+      navigate('/earth');
+    }
+  };
+
+  const handleViewMemorialBookClick = () => {
+    if (!buttonDisabled) {
+      navigate(`/everstar/${fill}/memorialbook`);
+    } else {
+      alert('아직 메모리얼북을 열람할 수 없어요');
+    }
   };
 
   const isDisabled = fill < 49;
@@ -135,7 +145,7 @@ export const EverStarMain: React.FC<EverStarMainProps> = ({
             theme={progressButtonTheme}
             size='large'
             disabled={isDisabled}
-            onClick={() => alert('버튼 클릭됨')}
+            onClick={handleViewMemorialBookClick}
           >
             {progressButtonText}
           </ViewMemorialBook>

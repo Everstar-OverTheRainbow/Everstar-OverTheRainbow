@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useParams,
+  useNavigate,
+} from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/Store';
+import { Header } from 'components/molecules/Header/Header';
+import { Footer } from 'components/molecules/Footer/Footer';
+import bgImage from 'assets/images/bg-everstar.webp';
 import { EverStarMain } from 'components/templates/EverStarMain';
 import { EverStarCheerMessage } from 'components/templates/EverStarCheerMessage';
 import { EverStarSearchStar } from 'components/templates/EverStarSearchStar';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/Store';
-import { Header } from 'components/molecules/Header/Header'; // 헤더 임포트
-import { Footer } from 'components/molecules/Footer/Footer'; // 푸터 임포트
-import bgImage from 'assets/images/bg-everstar.webp';
+import { MemorialBook } from 'components/templates/MemorialBook';
+import { useMemorialBooks } from 'hooks/useMemorialBooks';
 
 interface PetProfile {
   name: string;
@@ -20,18 +27,20 @@ interface PetProfile {
 }
 
 export const EverstarPage: React.FC = () => {
-  const params = useParams();
+  const params = useParams<{ pet: string }>();
   const [petProfile, setPetProfile] = useState<PetProfile | null>(null);
-  const location = useLocation(); // Use location to trigger re-render
+  const location = useLocation();
+  const navigate = useNavigate();
   const petId = useSelector((state: RootState) => state.pet.petDetails?.id);
+
   useEffect(() => {
     const storedPetDetails = sessionStorage.getItem('petDetails');
     const diffPet = sessionStorage.getItem('diffPetDetails');
-    if (Number(petId) === Number(params.pet)) {
-      if (storedPetDetails) {
-        try {
-          // Parse the stored JSON string and update the state
-          const petDetails = JSON.parse(storedPetDetails);
+
+    if (storedPetDetails) {
+      try {
+        const petDetails = JSON.parse(storedPetDetails);
+        if (Number(petId) === Number(params.pet)) {
           setPetProfile({
             name: petDetails.name || 'Unknown',
             age: petDetails.age || 0,
@@ -40,16 +49,16 @@ export const EverstarPage: React.FC = () => {
             tagList: petDetails.petPersonalities || [],
             avatarUrl: petDetails.profileImageUrl || '',
           });
-        } catch (error) {
-          console.error('Error parsing pet details:', error);
         }
+      } catch (error) {
+        console.error('Error parsing pet details:', error);
       }
-    } else if (Number(petId) !== Number(params.pet)) {
-      if (diffPet) {
-        try {
-          // Parse the stored JSON string and update the state
-          const diffPetDetails = JSON.parse(diffPet);
-          console.log(diffPetDetails);
+    }
+
+    if (diffPet) {
+      try {
+        const diffPetDetails = JSON.parse(diffPet);
+        if (Number(petId) !== Number(params.pet)) {
           setPetProfile({
             name: diffPetDetails.name || 'Unknown',
             age: diffPetDetails.age || 0,
@@ -58,12 +67,27 @@ export const EverstarPage: React.FC = () => {
             tagList: diffPetDetails.petPersonalities || [],
             avatarUrl: diffPetDetails.profileImageUrl || '',
           });
-        } catch (error) {
-          console.error('Error parsing pet details:', error);
         }
+      } catch (error) {
+        console.error('Error parsing diff pet details:', error);
       }
     }
-  }, [location]);
+  }, [location, params.pet, petId]);
+
+  const { data: memorialBooks } = useMemorialBooks(Number(params.pet));
+
+  const handleViewMemorialBook = () => {
+    if (memorialBooks && petProfile) {
+      const memorialBook = memorialBooks.find(
+        (book) => book.isOpen && book.isActive,
+      );
+      if (memorialBook) {
+        navigate(`/everstar/${params.pet}/memorialbook`);
+      } else {
+        alert('아직 메모리얼북을 열람할 수 없어요');
+      }
+    }
+  };
 
   return (
     <div
@@ -71,22 +95,25 @@ export const EverstarPage: React.FC = () => {
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div className='flex flex-col min-h-screen'>
-        <Header type='everstar' className='top-0 z-50' />{' '}
-        {/* 헤더를 여기에 배치 */}
+        <Header type='everstar' className='top-0 z-50' />
         <div className='flex-grow'>
           <Routes>
             <Route
               path='/'
               element={
-                <EverStarMain
-                  title='a'
-                  fill={49}
-                  buttonSize='large'
-                  buttonDisabled={false}
-                  buttonText='지구별로 이동'
-                  onButtonClick={() => console.log('영원별 이동')}
-                  buttonTheme='white'
-                />
+                petProfile ? (
+                  <EverStarMain
+                    title={petProfile.name}
+                    fill={49} // 단계 조회 없음 추후 api 추가
+                    buttonSize='large'
+                    buttonDisabled={false}
+                    buttonText='지구별로 이동'
+                    onButtonClick={handleViewMemorialBook}
+                    buttonTheme='white'
+                  />
+                ) : (
+                  <div>Loading...</div>
+                )
               }
             />
             <Route
@@ -99,14 +126,15 @@ export const EverstarPage: React.FC = () => {
                     totalPages={0} // Add actual data if available
                   />
                 ) : (
-                  <div>Loading...</div> // Or any fallback UI
+                  <div>Loading...</div>
                 )
               }
             />
             <Route path='explore' element={<EverStarSearchStar />} />
+            <Route path='memorialbook' element={<MemorialBook />} />
           </Routes>
         </div>
-        <Footer className='mt-auto' /> {/* 푸터를 여기에 배치 */}
+        <Footer className='mt-auto' />
       </div>
     </div>
   );
