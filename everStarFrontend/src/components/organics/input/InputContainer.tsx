@@ -15,57 +15,64 @@ export interface InputContainerProps {
   myMessage?: string;
   letterCardClassName?: string;
   centered?: boolean;
-  customText?: string; // 커스텀 텍스트 속성 추가
+  customText?: string;
   dateTime?: string;
   textboxLabel: string;
   largeButtonText: string;
   smallButtonText: string;
   showPrimaryButton?: boolean;
+  onPrimaryButtonClick?: () => void;
+  children?: React.ReactNode; // 추가된 속성
 }
 
 export const InputContainer: React.FC<InputContainerProps> = ({
   headerText,
   letterCardType,
-  letterCardColor = 'white', // 기본값 설정
-  letterCardState = 'notReceived', // 기본값 설정
+  letterCardColor = 'white',
+  letterCardState = 'notReceived',
   letterCardMessage,
   myName,
   petName,
   myMessage,
-  letterCardClassName = 'font-body !kor-subtitle-subtitle3', // 여기서 폰트 변경
+  letterCardClassName = 'font-body !kor-subtitle-subtitle3',
   centered = true,
-  customText = '', // 기본값 설정
+  customText = '',
   textboxLabel,
   largeButtonText,
   smallButtonText,
   dateTime,
   showPrimaryButton = true,
+  onPrimaryButtonClick,
+  children, // 추가된 속성
 }) => {
   const handleButtonClick = () => {
-    console.log('Primary Button Clicked');
+    if (onPrimaryButtonClick) {
+      onPrimaryButtonClick();
+    } else {
+      console.log('Primary Button Clicked');
+    }
   };
 
   const handleReplyClick = () => {
     console.log('답장하기 버튼 클릭');
   };
+
   return (
     <div className='flex justify-center p-6 bg-gray-100'>
       <div
         className='flex flex-col items-center w-[360px] gap-8 p-5 bg-white rounded-lg shadow-md'
         style={{ maxHeight: '742px', overflowY: 'auto' }}
       >
-        {/* Modal Header */}
         <ModalHeader text={headerText} showLeftIcon={true} />
-
-        {/* Content */}
         <div className='flex flex-col items-center w-full gap-8'>
           <div className='flex flex-col items-center w-full'>
-            {/* Letter Card or Custom Text */}
             {letterCardType ? (
               <LetterCard
                 name={myName ? `${myName}에게` : undefined}
                 type='send'
-                color={letterCardType === 'receive' ? 'bgorange' : letterCardColor}
+                color={
+                  letterCardType === 'receive' ? 'bgorange' : letterCardColor
+                }
                 state={letterCardState}
                 message={letterCardMessage}
                 className={letterCardClassName}
@@ -81,7 +88,6 @@ export const InputContainer: React.FC<InputContainerProps> = ({
               </div>
             )}
           </div>
-
           <div className='flex w-full'>
             {letterCardType === 'receive' ? (
               <div className='flex flex-col justify-center'>
@@ -108,10 +114,12 @@ export const InputContainer: React.FC<InputContainerProps> = ({
               </div>
             ) : (
               <div className='flex flex-col justify-center w-full'>
-                {/* Textbox */}
-                <Textbox type='large' className='' label={textboxLabel} showStar={false} />
-
-                {/* Large Primary Button */}
+                <Textbox
+                  type='large'
+                  className=''
+                  label={textboxLabel}
+                  showStar={false}
+                />
                 {showPrimaryButton && (
                   <div className='flex justify-center w-full'>
                     <PrimaryButton
@@ -125,8 +133,6 @@ export const InputContainer: React.FC<InputContainerProps> = ({
                     </PrimaryButton>
                   </div>
                 )}
-
-                {/* Small Primary Button */}
                 <div className='flex justify-end w-full mt-2'>
                   <PrimaryButton
                     theme='white'
@@ -141,6 +147,7 @@ export const InputContainer: React.FC<InputContainerProps> = ({
               </div>
             )}
           </div>
+          {children}
         </div>
       </div>
     </div>
