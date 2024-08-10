@@ -4,6 +4,8 @@ import { LetterCard } from 'components/molecules/cards/LetterCard/LetterCard';
 import { Textbox } from 'components/molecules/input/Textbox';
 import { PrimaryButton } from 'components/atoms/buttons/PrimaryButton';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { postOpenVidueSession } from 'api/earthApi';
 
 export interface InputContainerProps {
   headerText: string;
@@ -81,6 +83,11 @@ export const InputContainer: React.FC<InputContainerProps> = ({
     }
   };
 
+  const handleOpenVidueClick = async () => {
+    const sessionId = await postOpenVidueSession();
+    navigate(`/earth/openvidu/sessionid/${sessionId}`);
+  }
+
   return (
     <div className='flex justify-center p-6 bg-gray-100'>
       <div
@@ -127,7 +134,7 @@ export const InputContainer: React.FC<InputContainerProps> = ({
               size='large'
               disabled={false}
               icon={null}
-              onClick={() => navigate('/earth/openvidu/sessionid')}
+              onClick={handleOpenVidueClick}
             >
               화상통화 해보기
             </PrimaryButton>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import config from 'config';
 
 export interface Letter {
@@ -105,3 +106,19 @@ export const fetchLetterPetDetail = async (
 
   return result;
 };
+
+
+export const postOpenVidueSession = async () => {
+  try{
+    const response = await axios.post(`${config.API_BASE_URL}/api/sessions`);
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      alert(err.response?.data?.errorMessage || '알 수 없는 오류가 발생했습니다.');
+    } else {
+      alert('알 수 없는 오류가 발생했습니다.');
+    }
+    return null;
+  }
+}
