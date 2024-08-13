@@ -13,18 +13,39 @@ import { MemorialBookDiaryModal } from 'components/organics/MemorialBook/Memoria
 import bgImage from 'assets/images/bg-login.webp';
 import { SplashTemplate } from './SplashTemplate';
 
-const parseMemorialBookData = (
+const toBase64 = async (url: string): Promise<string> => {
+  const response = await fetch(url, {
+    mode: 'cors', // CORS 문제를 해결하기 위한 설정
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch image');
+  }
+
+  const blob = await response.blob();
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
+
+const parseMemorialBookData = async (
   data: MemorialBookDetailsResponse,
-  avatarUrl: string | undefined
-): PageType[] => {
+  avatarUrl: string | undefined,
+): Promise<PageType[]> => {
   const { quests, questAnswers, aiAnswers, diaries, sentimentAnalysis, pet } =
     data;
   const pages: PageType[] = [];
 
-  pages.push({
-    type: 'cover',
-    src: avatarUrl,
-  });
+  if (avatarUrl) {
+    const base64Avatar = await toBase64(avatarUrl);
+    pages.push({
+      type: 'cover',
+      src: base64Avatar,
+    });
+  }
 
   const sentimentResults = [
     sentimentAnalysis.week1Result * 100,
@@ -43,9 +64,9 @@ const parseMemorialBookData = (
     scores: sentimentResults,
   });
 
-  quests.forEach((quest) => {
+  for (const quest of quests) {
     const questAnswer = questAnswers.find(
-      (answer) => answer.questId === quest.id
+      (answer) => answer.questId === quest.id,
     );
     const aiAnswer = aiAnswers.find((answer) => answer.questId === quest.id);
 
@@ -62,26 +83,31 @@ const parseMemorialBookData = (
       questAnswer &&
       aiAnswer
     ) {
+      const myImageBase64 = await toBase64(questAnswer.imageUrl);
+      const petImageBase64 = await toBase64(aiAnswer.imageUrl);
+
       pages.push({
         type: 'imageQuestion',
         question: quest.content,
         petName: pet.name,
-        myImage: questAnswer.imageUrl,
+        myImage: myImageBase64,
         myAnswer: questAnswer.content,
-        petImage: aiAnswer.imageUrl,
+        petImage: petImageBase64,
         petAnswer: aiAnswer.content,
       });
     }
-  });
+  }
 
-  diaries.forEach((diary) => {
+  for (const diary of diaries) {
+    const imageBase64 = diary.imageUrl ? await toBase64(diary.imageUrl) : '';
+
     pages.push({
       type: 'diary',
       title: diary.title,
       content: diary.content,
-      imageUrl: diary.imageUrl,
+      imageUrl: imageBase64,
     });
-  });
+  }
 
   return pages;
 };
@@ -116,29 +142,31 @@ export const MemorialBook: React.FC<{ avatarUrl?: string }> = ({
     data: memorialBookDetails,
     isLoading,
     refetch,
-  } = useFetchMemorialBookById(petId, memorialBookId); // refetch 추가
+  } = useFetchMemorialBookById(petId, memorialBookId);
 
   const [pages, setPages] = useState<PageType[]>([]);
   const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
-  const [isDiaryUpdated, setIsDiaryUpdated] = useState(false); // 새로운 상태 추가
+  const [isDiaryUpdated, setIsDiaryUpdated] = useState(false);
 
-  // 새로운 useEffect 추가: avatarUrl이 변경될 때 강제로 리렌더링
   useEffect(() => {
-    if (memorialBookDetails) {
-      const parsedPages = parseMemorialBookData(
-        memorialBookDetails.data,
-        avatarUrl
-      );
-      setPages(parsedPages);
-    }
+    const fetchData = async () => {
+      if (memorialBookDetails) {
+        const parsedPages = await parseMemorialBookData(
+          memorialBookDetails.data,
+          avatarUrl,
+        );
+        setPages(parsedPages);
+      }
+    };
+
+    fetchData();
   }, [memorialBookDetails, avatarUrl]);
 
-  // diary 업데이트 감지
   useEffect(() => {
     if (isDiaryUpdated) {
-      refetch(); // 데이터 다시 불러오기
+      refetch();
       alert('저장이 완료되었어요.');
-      setIsDiaryUpdated(false); // 상태 초기화
+      setIsDiaryUpdated(false);
     }
   }, [isDiaryUpdated, refetch]);
 
@@ -232,7 +260,7 @@ export const MemorialBook: React.FC<{ avatarUrl?: string }> = ({
       <MemorialBookDiaryModal
         isOpen={isDiaryModalOpen}
         onClose={handleCloseDiaryModal}
-        onSuccess={() => setIsDiaryUpdated(true)} // 일기 작성 후 상태 업데이트
+        onSuccess={() => setIsDiaryUpdated(true)}
       />
     </div>
   );
