@@ -22,7 +22,8 @@ export interface InputContainerProps {
   smallButtonText: string;
   showPrimaryButton?: boolean;
   isRtc?: boolean;
-  handleRtcButtonClick?: () => void;
+  handleRtcPuzzleClick?: () => void;
+  rtcPuzzleText?: string;
   onLeftIconClick?: () => void; // 추가된 속성
   primaryButtonDisabled?: boolean;
   ghostText?: string;
@@ -55,7 +56,8 @@ export const InputContainer: React.FC<InputContainerProps> = ({
   dateTime,
   showPrimaryButton = true,
   isRtc = false,
-  handleRtcButtonClick,
+  handleRtcPuzzleClick,
+  rtcPuzzleText,
   onLeftIconClick, // 추가된 속성
   primaryButtonDisabled = false,
   ghostText,
@@ -92,11 +94,7 @@ export const InputContainer: React.FC<InputContainerProps> = ({
         style={{ maxHeight: '1156px', overflowY: 'auto' }}
       >
         {/* Modal Header */}
-        <ModalHeader
-          text={headerText}
-          showLeftIcon={true}
-          onLeftIconClick={onLeftIconClick}
-        />
+        <ModalHeader text={headerText} showLeftIcon={true} onLeftIconClick={onLeftIconClick} />
 
         {/* Content */}
         <div className='flex flex-col items-center w-full gap-8'>
@@ -106,9 +104,7 @@ export const InputContainer: React.FC<InputContainerProps> = ({
               <LetterCard
                 name={myName ? `${myName}에게` : undefined}
                 type='send'
-                color={
-                  letterCardType === 'receive' ? 'bgorange' : letterCardColor
-                }
+                color={letterCardType === 'receive' ? 'bgorange' : letterCardColor}
                 state={letterCardState}
                 message={letterCardMessage}
                 className={letterCardClassName}
@@ -131,9 +127,9 @@ export const InputContainer: React.FC<InputContainerProps> = ({
               size='large'
               disabled={false}
               icon={null}
-              onClick={handleRtcButtonClick}
+              onClick={handleRtcPuzzleClick}
             >
-              화상통화 해보기
+              {rtcPuzzleText}
             </PrimaryButton>
           )}
           <div className='flex w-full'>

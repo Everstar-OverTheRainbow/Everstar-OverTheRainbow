@@ -40,6 +40,9 @@ export const OpenViduApp = () => {
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
   const [isSpeakerMuted, setIsSpeakerMuted] = useState<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
+  const [isChatVisible, setIsChatVisible] = useState<boolean>(true);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
   const [exitClick, setExitClick] = useState<boolean>(false);
   const [, setCurrentVideoDevice] = useState<MediaDeviceInfo | Device | undefined>(undefined);
 
@@ -68,6 +71,21 @@ export const OpenViduApp = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleSwipeDown = (event: React.TouchEvent) => {
+    event.preventDefault();
+    setIsChatVisible(false); // 스와이프 다운 시 채팅 숨김
+  };
   const clip = () => {
     const textarea = document.createElement('textarea');
     document.body.appendChild(textarea);
@@ -75,7 +93,7 @@ export const OpenViduApp = () => {
     const slashCount = (currentUrl.match(/\//g) || []).length;
 
     let url;
-    if (slashCount === 5) {
+    if (slashCount === 4) {
       url = `${currentUrl}/${mySessionId}`;
     } else {
       url = currentUrl;
@@ -216,7 +234,7 @@ export const OpenViduApp = () => {
   };
 
   const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
+    setIsChatOpen((prevState) => !prevState);
   };
 
   const toggleExit = () => {
@@ -250,7 +268,7 @@ export const OpenViduApp = () => {
   };
 
   return (
-    <div className='relative flex flex-col items-center p-12'>
+    <div className='relative flex flex-col items-center w-full h-full p-12'>
       <div className='absolute inset-0 z-0'>
         <Glass
           currentPage={1}
@@ -321,15 +339,17 @@ export const OpenViduApp = () => {
       ) : null}
 
       {session !== undefined ? (
-        <div id='session flex flex-col justify-center items-center w-full '>
+        <div id='session flex flex-col justify-center items-center w-full h-full sm:p-8 md:p-12'>
           <div id='session-header' className='z-10 flex flex-row justify-around w-full mt-6 mb-6'>
-            <h1 id='session-title' className='z-10 kor-h-h2 '>
+            <h1 id='session-title' className='z-10 kor-h-h2 sm:text-2xl md:text-3xl'>
               화상 채널
             </h1>
-            <h3 className='z-10 ml-5'>💡 퀘스트 완료를 위해 화면 캡처를 해주세요!</h3>
+            <h3 className='z-10 ml-5 sm:text-base md:text-lg'>
+              💡 퀘스트 완료를 위해 화면 캡처를 해주세요!
+            </h3>
           </div>
           <div className='flex flex-row items-center justify-center w-full h-4/5'>
-            <div className='z-10 flex flex-col items-center justify-center w-1/6 gap-8 h-4/5 '>
+            <div className='z-10 flex flex-col items-center justify-center gap-8 h-4/5 md:w-1/3 lg:w-1/4'>
               <CircleButton
                 theme={isAudioMuted ? 'white' : 'hover'}
                 onClick={toggleAudio}
@@ -352,19 +372,17 @@ export const OpenViduApp = () => {
                 label={isSpeakerMuted ? '스피커켜기' : '스피커끄기'}
               />
             </div>
-            <div className='z-10 flex flex-row w-full gap-4 h-4/5'>
+            <div className='z-10 flex w-full gap-4 tablet:flex-row h-4/5 mobile:flex-col'>
               {mainStreamManager !== undefined ? (
                 <UserVideoComponent streamManager={mainStreamManager} />
               ) : null}
-              {subscribers.map((sub, i) => (
-                <div
-                  key={i}
-                  className='box-border stream-container col-md-3'
-                  // onClick={() => handleMainVideoStream(sub)}
-                >
-                  <UserVideoComponent streamManager={sub} />
-                </div>
-              ))}
+              <div className='grid w-full grid-cols-2 gap-4'>
+                {subscribers.map((sub, i) => (
+                  <div key={i} className='box-border col-span-1 stream-container'>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </div>
             </div>
             <div className='z-10 flex flex-col items-center justify-center w-1/6 gap-8 h-4/5'>
               <CircleButton
@@ -389,11 +407,29 @@ export const OpenViduApp = () => {
                 label={'나가기'}
               />
             </div>
-            {isChatOpen && (
-              <div className='z-10 w-[40%] h-[500px] bg-white shadow-lg flex flex-row justify-center rounded-lg items-center'>
-                <Chatting userName={myUserName} />
-              </div>
-            )}
+            {isChatOpen &&
+              (isMobile ? (
+                <div
+                  className={`${
+                    isChatVisible ? 'translate-y-0' : 'translate-y-full'
+                  } transition-transform z-10 w-full h-4/5 bg-white shadow-lg flex flex-row justify-center rounded-lg items-center absolute bottom-0 left-0`}
+                  onTouchEnd={handleSwipeDown} // 스와이프 처리
+                >
+                  <Chatting
+                    userName={myUserName}
+                    onClick={() => setIsChatVisible(false)}
+                    arrowOn={true}
+                  />
+                </div>
+              ) : (
+                <div className='z-10 w-[40%] h-[500px] bg-white shadow-lg flex flex-row justify-center rounded-lg items-center'>
+                  <Chatting
+                    userName={myUserName}
+                    onClick={() => setIsChatVisible(false)}
+                    arrowOn={false}
+                  />
+                </div>
+              ))}
           </div>
         </div>
       ) : null}

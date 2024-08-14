@@ -9,7 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { Puzzle } from './Puzzle';
 
- const QuestPuzzle: React.FC = () => {
+
+export const QuestPuzzle: React.FC = () => {
+
   const navigate = useNavigate();
   const [text, setText] = useState('');
   const [questContent, setQuestContent] = useState('');
@@ -96,7 +98,6 @@ import { Puzzle } from './Puzzle';
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(850);
 
-
   return (
     <div className='relative items-center justify-center min-h-screen fle'>
       
@@ -106,4 +107,3 @@ import { Puzzle } from './Puzzle';
   );
 };
 
-export default QuestPuzzle;

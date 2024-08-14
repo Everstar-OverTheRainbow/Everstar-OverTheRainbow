@@ -77,7 +77,11 @@ export function CircleButton({ theme, icon, label, onClick, disabled }: ICircleB
   return (
     <div className='flex flex-col text-center'>
       <button
-        className='relative flex items-center justify-center rounded-lg px-4 w-[120px] h-[120px]'
+        className='relative flex items-center justify-center rounded-lg px-4 
+                       w-[60px] h-[60px] 
+                   mobile:w-[80px] mobile:h-[80px]
+                   tablet:w-[100px] tablet:h-[100px] 
+                   laptop:w-[120px] laptop:h-[120px]'
         disabled={disabled}
         onClick={onClick}
       >

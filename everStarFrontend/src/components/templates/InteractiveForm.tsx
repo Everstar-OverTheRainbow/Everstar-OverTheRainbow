@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  InputContainer,
-  InputContainerProps,
-} from 'components/organics/input/InputContainer';
+import { InputContainer, InputContainerProps } from 'components/organics/input/InputContainer';
 import { Glass } from 'components/molecules/Glass/Glass';
 
 interface InteractiveFormProps extends InputContainerProps {
@@ -19,7 +16,8 @@ interface InteractiveFormProps extends InputContainerProps {
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleReplyClick?: () => void;
   isRtc?: boolean;
-  handleRtcButtonClick?: () => void;
+  handleRtcPuzzleClick?: () => void;
+  rtcPuzzleText?: string;
   handleSmallButtonDisabled?: boolean;
   glassEffect?: boolean;
   className?: string;
@@ -54,10 +52,11 @@ export const InteractiveForm: React.FC<InteractiveFormProps> = ({
   onTextChange,
   handleReplyClick,
   isRtc,
-  handleRtcButtonClick,
+  handleRtcPuzzleClick,
   handleSmallButtonDisabled,
   glassEffect,
   className,
+  rtcPuzzleText,
 }) => {
   // const [image, setImage] = useState<string | null>(selectedImage || null);
 
@@ -101,7 +100,8 @@ export const InteractiveForm: React.FC<InteractiveFormProps> = ({
           onButtonClick2={onButtonClick2}
           handleReplyClick={handleReplyClick}
           isRtc={isRtc}
-          handleRtcButtonClick={handleRtcButtonClick}
+          handleRtcPuzzleClick={handleRtcPuzzleClick}
+          rtcPuzzleText={rtcPuzzleText}
           handleSmallButtonDisabled={handleSmallButtonDisabled}
           className={className}
         />

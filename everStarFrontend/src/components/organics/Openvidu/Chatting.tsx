@@ -3,6 +3,7 @@ import { Client, IMessage } from '@stomp/stompjs';
 import connectToStomp from './Stomp';
 import { useParams } from 'react-router-dom';
 import { MessageWithTime } from 'components/molecules/cards/MessageCard/MessageWithTime';
+import { ArrowIcon } from 'components/atoms/icons/Arrow/ArrowIcon';
 
 interface Message {
   type: string;
@@ -16,9 +17,11 @@ type Props = {
 
 interface ChattingProps {
   userName: string;
+  arrowOn: boolean;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Chatting: React.FC<ChattingProps> = ({ userName }) => {
+const Chatting: React.FC<ChattingProps> = ({ userName, onClick, arrowOn }) => {
   const { sessionId } = useParams<Props>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
@@ -70,17 +73,16 @@ const Chatting: React.FC<ChattingProps> = ({ userName }) => {
 
   return (
     <div style={{ padding: '20px' }} className='w-full h-full'>
-      <h1 className='mb-3 text-center kor-h-h3'>채팅</h1>
-      <div
-        style={{
-          border: '1px solid grey',
-          padding: '10px',
-          height: '70%',
-          width: '100%',
-          overflowY: 'scroll',
-          fontSize: '13px',
-        }}
-      >
+      <div className='flex flex-row justify-center w-full'>
+        <h1 className='mb-3 text-center kor-h-h3'>채팅</h1>
+        {arrowOn && (
+          <button onClick={onClick} className='mb-3 ml-2'>
+            <ArrowIcon direction='down' size={16} color='black' />
+          </button>
+        )}
+      </div>
+
+      <div className=' h-[70%] p-2.5 w-full mt-2 border rounded-lg shadow-md solid 3px overflow-y-scroll text-xs'>
         {messages.map((msg, idx) => (
           <div
             key={idx}

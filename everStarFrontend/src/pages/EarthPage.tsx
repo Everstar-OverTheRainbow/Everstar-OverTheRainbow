@@ -3,22 +3,18 @@ import { Routes, Route } from 'react-router-dom';
 import { EarthMain } from 'components/templates/EarthMain';
 import { LetterBoxTemplate } from 'components/templates/LetterBoxTemplate';
 import { Footer } from 'components/molecules/Footer/Footer';
-import {
-  LetterColor,
-  LetterState,
-} from 'components/molecules/cards/LetterCard/LetterCard';
+import { LetterColor, LetterState } from 'components/molecules/cards/LetterCard/LetterCard';
 import { LetterDetailTemplate } from 'components/templates/LetterDetailTemplate';
 import { LetterWriteTemplate } from 'components/templates/LetterWriteTemplate';
 import { QuestRouter } from 'components/templates/QuestRouter';
 import { QuestOpenviduTemplate } from 'components/templates/QuestOpenviduTemplate';
-import { OpenViduApp } from 'components/templates/OpenViduApp';
 
 import bgImage from 'assets/images/bg-earth.webp';
 import { RootState } from 'store/Store';
 import { useSelector } from 'react-redux';
 import { useFetchOtherPetDetails } from 'hooks/useEverStar';
+import { QuestPuzzle } from 'components/templates/QuestPuzzle';
 import { PrivateRoute, PetDetailsRoute } from 'ProtectedRoutes';
-
 import { SplashTemplate } from 'components/templates/SplashTemplate';
 
 interface PetProfile {
@@ -186,11 +182,7 @@ export const EarthPage: React.FC = () => {
 
           {/* 보호되지 않은 경로들 */}
           <Route path='openvidu/:questid' element={<QuestOpenviduTemplate />} />
-          <Route path='openvidu/sessionid' element={<OpenViduApp />} />
-          <Route
-            path='openvidu/sessionid/:sessionId'
-            element={<OpenViduApp />}
-          />
+          <Route path='puzzle' element={<QuestPuzzle />} />
         </Routes>
       </div>
       <Footer className='fixed bottom-0 left-0 z-10 w-full' />
