@@ -1,5 +1,7 @@
-import { ChangeEventHandler, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-; // import를 사용하여 headbreaker 모듈을 가져옵니다.
+import React, { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/Store';
+import html2canvas from 'html2canvas';
 
 interface QuestPuzzleProps {
   id: string;
@@ -9,36 +11,60 @@ interface QuestPuzzleProps {
 }
 
 export const Puzzle: React.FC<QuestPuzzleProps> = (props) => {
-  const puzzleRef = useRef<HTMLDivElement>(null); // useRef의 타입을 명시적으로 지정합니다.
-  const headbreaker: any = require('headbreaker')
+  const puzzleRef = useRef<HTMLDivElement>(null);
+  const headbreaker: any = require('headbreaker');
+  const petImg = useSelector((state: RootState) => state.pet.petDetails?.profileImageUrl);
 
   useEffect(() => {
     const puzzle = puzzleRef.current;
 
     if (puzzle) {
       const vangogh = new Image();
-      vangogh.src = 'https://everstarbucket.s3.ap-northeast-2.amazonaws.com/%EB%B0%A9%EC%9A%B8.jpg';
-      
+      if (petImg) {
+        vangogh.src = petImg;
+      }
+
       vangogh.onload = () => {
         const background = new headbreaker.Canvas(puzzle, {
-          width: 1000, height: 1000,
-          pieceSize: 100, proximity: 10,
-          borderFill: 10, strokeWidth: 2,
-          lineSoftness: 0.12, image: vangogh,
-          maxPiecesCount: {x: 1, y: 1},
-          painter: new headbreaker.painters.Konva()
+          width: 500,
+          height: 500,
+          pieceSize: 100,
+          proximity: 10,
+          borderFill: 10,
+          strokeWidth: 2,
+          lineSoftness: 0.12,
+          image: vangogh,
+          maxPiecesCount: { x: 1, y: 1 },
+          preventOffstageDrag: true,
+          fixed: true,
+          painter: new headbreaker.painters.Konva(),
         });
 
         background.adjustImagesToPuzzleHeight();
         background.autogenerate({
           horizontalPiecesCount: 3,
-          verticalPiecesCount: 3
+          verticalPiecesCount: 3,
         });
         background.shuffle(0.7);
         background.draw();
       };
     }
-  }, [props.height, props.pieceSize, props.width]);
+  }, [props.height, props.pieceSize, props.width, petImg]);
 
-  return <div ref={puzzleRef} id={props.id} style={{ width: props.width, height: props.height }}></div>;
-}
+  return (
+    <div>
+      <div
+        ref={puzzleRef}
+        id={props.id}
+        style={{
+          width: '100%',
+          height: '50%',
+          border: 'solid black 1px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      ></div>
+      <button>누르면 캡처</button>
+    </div>
+  );
+};

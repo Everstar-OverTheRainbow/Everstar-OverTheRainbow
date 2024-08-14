@@ -9,9 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { Puzzle } from './Puzzle';
 
-
 export const QuestPuzzle: React.FC = () => {
-
   const navigate = useNavigate();
   const [text, setText] = useState('');
   const [questContent, setQuestContent] = useState('');
@@ -100,10 +98,14 @@ export const QuestPuzzle: React.FC = () => {
 
   return (
     <div className='relative items-center justify-center min-h-screen fle'>
-      
-           <Puzzle id="puzzle" pieceSize={pieceSize} width={width} height={height} />
-
+      <Glass
+        currentPage={1}
+        totalPages={1}
+        onPageChange={() => console.log('이동')}
+        showPageIndicator={false}
+        className='w-full h-auto sm:w-4/5 md:w-3/5 lg:w-2/5 sm:h-4/5'
+      />
+      <Puzzle id='puzzle' pieceSize={pieceSize} width={width} height={height} />
     </div>
   );
 };
-
