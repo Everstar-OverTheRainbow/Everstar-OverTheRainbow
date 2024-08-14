@@ -214,6 +214,7 @@ export const QuestOpenviduTemplate: React.FC = () => {
           rtcPuzzleText={rtcPuzzleText()}
           onTextChange={handleTextChange}
           value={text}
+          onLeftIconClick={() => navigate("/earth")}
           onButtonClick={handleSubmit}
           onButtonClick2={handleButtonClick2}
           handleSmallButtonDisabled={!didOpenvidu}
