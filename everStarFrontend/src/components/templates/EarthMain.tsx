@@ -159,34 +159,7 @@ export const EarthMain: React.FC<EarthMainProps> = ({
       return 'absolute left-0 bottom-0 w-[1280px] h-[1024px] mb-[-70px]';
     }
   };
-
-  useEffect(() => {
-    const EventSource = EventSourcePolyfill || NativeEventSource;
-
-    console.log(petId);
-    const eventSource = new EventSource(
-      `https://i11b101.p.ssafy.io/api/earth/connect/${petId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    eventSource.onmessage = (event) => {
-      console.log(event.data);
-      if (event.data.length !== 0 && event.data !== 'dummy') {
-        console.log(event.data);
-        if (quest !== event.data) {
-          setQuest(event.data);
-        }
-      }
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [quest, petId, accessToken]);
+  
 
   return (
     <div>

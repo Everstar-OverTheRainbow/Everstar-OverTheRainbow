@@ -129,13 +129,41 @@ export const MainActionComponent: React.FC<MainActionComponentProps> = ({
     }
   };
 
+  // useEffect(() => {
+  //   const EventSource = EventSourcePolyfill || NativeEventSource;
+
+  //   console.log(111);
+  //   console.log(petId);
+  //   const eventSource = new EventSource(
+  //     `${config.API_BASE_URL}/api/earth/connect/${petId}`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     }
+  //   );
+
+  //   eventSource.onmessage = (event) => {
+  //     console.log(event.data);
+  //     if (event.data.length !== 0 && event.data !== 'dummy') {
+  //       console.log(event.data);
+  //       if (quest !== event.data) {
+  //         setQuest(event.data);
+  //       }
+  //     }
+  //   };
+
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, [quest, petId, accessToken]);
+
   useEffect(() => {
     const EventSource = EventSourcePolyfill || NativeEventSource;
 
-    console.log(111);
     console.log(petId);
     const eventSource = new EventSource(
-      `${config.API_BASE_URL}/api/earth/connect/${petId}`,
+      `https://i11b101.p.ssafy.io/api/earth/connect/${petId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
