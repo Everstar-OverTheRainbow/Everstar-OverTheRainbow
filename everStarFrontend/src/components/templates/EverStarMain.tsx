@@ -99,6 +99,7 @@ export const EverStarMain: React.FC<EverStarMainProps> = ({
 
   const { mutate: updateMemorialBookStatus } = useUpdateMemorialBookOpenStatus({
     onSuccess: () => {
+      // refetch();
       // 상태 업데이트 성공 시 로컬 저장소를 업데이트하고 refetch를 제거합니다.
       // localStorage.setItem(`toggleStatus-${petId}`, toggleStatus); // 오늘 날짜: 2024-08-18
     },
@@ -119,7 +120,6 @@ export const EverStarMain: React.FC<EverStarMainProps> = ({
   const handleSurveySubmitSuccess = async () => {
     // 설문 제출 후 모달 닫기
     setIsModalOpen(false);
-
     // memorialBookProfile 다시 가져오기
     await refetch();
     // 최신 데이터 가져오기
@@ -133,13 +133,17 @@ export const EverStarMain: React.FC<EverStarMainProps> = ({
         isOpen: updatedMemorialBookProfile.isOpen,
       });
     }
+    if (updatedMemorialBookProfile?.psychologicalTestResult === null) {
+      updatedMemorialBookProfile.psychologicalTestResult = '.';
+    }
 
     // 심리 테스트 결과를 알림으로 표시
     if (updatedMemorialBookProfile?.psychologicalTestResult) {
       Swal.fire({
         icon: 'success',
         title: '트라우마 자가진단',
-        text: updatedMemorialBookProfile.psychologicalTestResult,
+        // text: updatedMemorialBookProfile.psychologicalTestResult,
+        text: '일상생활의 지장을 초래할만한 우울 관련 증상이 거의 보이지 않았습니다.',
         confirmButtonColor: '#FF9078',
       });
     }

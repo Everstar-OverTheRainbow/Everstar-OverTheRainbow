@@ -25,7 +25,7 @@ import {
 // Fetch the memorial book for a given pet and refetch when questIndex changes
 export const useFetchMemorialBooksWithQuest = (
   petId: number,
-  questIndex: number,
+  questIndex: number
 ) => {
   const token = useSelector((state: RootState) => state.auth.accessToken);
 
@@ -60,7 +60,7 @@ export const useFetchMemorialBooks = (petId: number) => {
 // Fetch a specific memorial book by its ID
 export const useFetchMemorialBookById = (
   petId: number,
-  memorialBookId: number,
+  memorialBookId: number
 ) => {
   const token = useSelector((state: RootState) => state.auth.accessToken);
   const dispatch = useDispatch();
@@ -94,7 +94,7 @@ export const useUpdateMemorialBookOpenStatus = (
     void,
     Error,
     { petId: number; memorialBookId: number; isOpen: boolean }
-  >,
+  >
 ) => {
   const queryClient = useQueryClient();
   const token = useSelector((state: RootState) => state.auth.accessToken);
@@ -140,7 +140,7 @@ export const useCreateDiary = (
       content: string;
       imageFile: File | null;
     }
-  >,
+  >
 ) => {
   const queryClient = useQueryClient();
   const token = useSelector((state: RootState) => state.auth.accessToken);
@@ -166,7 +166,7 @@ export const useCreateDiary = (
         title,
         content,
         imageFile,
-        token,
+        token
       );
     },
     onSuccess: (data, variables, context) => {
@@ -192,7 +192,7 @@ export const useUpdatePsychologicalTestResult = (
     { psychologicalTestResult: string },
     Error,
     { petId: number; memorialBookId: number; psychologicalTestResult: string }
-  >,
+  >
 ) => {
   const queryClient = useQueryClient();
   const token = useSelector((state: RootState) => state.auth.accessToken);
@@ -210,7 +210,7 @@ export const useUpdatePsychologicalTestResult = (
         petId,
         memorialBookId,
         psychologicalTestResult,
-        token,
+        token
       );
     },
     onSuccess: (data, variables, context) => {
